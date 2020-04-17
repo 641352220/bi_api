@@ -1,5 +1,6 @@
 #  API 文档
 ##### version __1.0.0__
+##### 内网接口地址 http://101.200.190.163:8080
 
 <br>
 ### I ChangeLog
@@ -69,7 +70,10 @@
   - [x] [6.6 渠道链接列表](#66-渠道链接列表)
   - [x] [6.7 新增渠道](#67-新增渠道)
   - [x] [6.8 新增渠道链接](#68-新增渠道链接)
-
+- [x] 7.[安卓苹果](#4系统菜单)
+  - [x] [7.1 APP列表(包名列表)](#71-APP列表(包名列表))
+  - [x] [7.2 APP渠道列表(媒体列表)](#72-APP渠道列表(媒体列表))
+  - [x] [7.3 新增或者修改包名](#73-新增或者修改包名)
 
 
 ------
@@ -1651,6 +1655,150 @@ sample:
   "message": "成功",
   "data": {},
   "timestamp": 1587028932286
+}
+```
+
+------
+
+### 7.安卓苹果
+
+#### 7.1 APP列表(包名列表)
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/xxl/appList.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>APP列表(包名列表)</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+无
+
+##### 出参
+
+参数名|非空|类型|说明
+---|---|---|---
+appId | 是 | String | 包名ID,传值用的
+name | 是 | String | 包名,显示用的
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+    "list": [
+      {
+        "appId": 1,
+        "name": "蚂蚁借款分期"
+      },
+      {
+        "appId": 110,
+        "name": "蚂蚁白卡"
+      }
+    ]
+  },
+  "timestamp": 1587100427727
+}
+```
+
+------
+
+#### 7.2 APP渠道列表(媒体列表)
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/xxl/appList.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>APP列表(包名列表)</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+无
+
+##### 出参
+
+参数名|非空|类型|说明
+---|---|---|---
+appId | 是 | String | 包名ID,传值用的
+name | 是 | String | 包名,显示用的
+ab | 是 | String | AB面,0审核页面也就是A面 1 正常页面也就是B面
+banben | 是 | String | 版本1234这种
+channel | 是 | String | 渠道:VIVO,OPPO,iOS....
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+    "list": [
+      {
+        "appId": 1,
+        "name": "蚂蚁借款分期",
+		"ab": 1,
+		"banben": 1,
+		"channel": "VIVO"
+      },
+      {
+        "appId": 1,
+        "name": "蚂蚁借款分期",
+		"ab": 1,
+		"banben": 1,
+		"channel": "OPPO"
+      }
+    ]
+  },
+  "timestamp": 1587100427727
+}
+```
+
+------
+
+#### 7.3  新增或者修改包名
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/xxl/appList.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>APP列表(包名列表)</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+参数名|非空|类型|说明
+---|---|---|---
+appId | 是 | String | 包名ID
+name | 是 | String | 包名
+strings | 是 | String | app的附属渠道拼接字符串,拼接规则:渠道,AB面,版本-渠道,AB面,版本,例如:VIVO,1,1-OPPO,0,2
+
+##### 出参
+
+无
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {},
+  "timestamp": 1587100427727
 }
 ```
 
