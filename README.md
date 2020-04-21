@@ -70,11 +70,20 @@
   - [x] [6.6 渠道链接列表](#66-渠道链接列表)
   - [x] [6.7 新增渠道](#67-新增渠道)
   - [x] [6.8 新增渠道链接](#68-新增渠道链接)
-- [x] 7.[安卓苹果](#4系统菜单)
+- [x] 7.[安卓苹果](#8系统菜单)
   - [x] [7.1 APP列表(包名列表)](#71-APP列表(包名列表))
   - [x] [7.2 APP渠道列表(媒体列表)](#72-APP渠道列表(媒体列表))
   - [x] [7.3 新增或者修改包名](#73-新增或者修改包名)
-
+- [x] 8.[商务](#8商务)
+  - [x] [8.1 商务表格数据](#81-商务表格数据)
+  - [x] [8.2 明细数据](#82-明细数据)
+  - [x] [8.3 新增消耗](#83-新增消耗)
+  - [x] [8.4 新增充值](#84-新增充值)
+  - [x] [8.5 新增开票](#85-新增开票)
+- [x] 9.[财务](#9财务)
+  - [x] [9.1 商务流水](#91-商务流水)
+  - [x] [9.2 商务开票记录](#92-商务开票记录)
+  - [x] [9.3 修改商务开票](#93-修改商务开票)
 
 ------
 
@@ -1799,6 +1808,454 @@ sample:
   "message": "成功",
   "data": {},
   "timestamp": 1587100427727
+}
+```
+
+------
+
+### 8.商务
+
+#### 8.1 商务表格数据
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/sw/tableData.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>商务表格数据</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+参数名|非空|类型|说明
+---|---|---|---
+startTime | 是 | String | 开始时间
+endTime | 是 | String | 结束时间
+productName | 是 | String | 产品名
+gongsiName | 是 | String | 公司名
+settlementType | 是 | String | 结算方式 1A 2B
+state | 是 | String | 状态 0 正常 1停用
+
+##### 出参
+
+参数名|非空|类型|说明
+---|---|---|---
+gongsiName | 是 | String | 公司名
+productName | 是 | String | 产品名
+settlementType | 是 | String | 结算方式 1A 2B
+uv | 是 | String | 系统UV数
+revenueUv | 是 | String | 结算UV数
+unitPrice | 是 | String | 单价
+revenueMoney | 是 | String | 结算金额
+badMoney | 是 | String | 坏账
+receivablesSubject | 是 | String | 结算主体
+state | 是 | String | 状态 0 正常 1 停用
+belonger | 是 | String | 归属人
+productId | 是 | String | 产品ID
+cz | 是 | String | 充值
+ye | 是 | String | 营收
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+    "list": [
+      {
+        "gongsiName": "海田科技",
+        "productName": "山桃街",
+        "settlementType": 0,
+        "uv": 100,
+        "revenueUv": 100,
+        "unitPrice": 10,
+        "revenueMoney": "100",
+        "badMoney": "0",
+        "receivablesSubject": "海田",
+        "state": 0,
+        "belonger": "admin",
+        "productId": 1,
+        "cz": "0",
+        "ye": -100
+      }
+    ]
+  },
+  "timestamp": 1587449222157
+}
+```
+
+------
+
+#### 8.2 明细数据
+
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/sw/tableInfoData.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>明细数据</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+参数名|非空|类型|说明
+---|---|---|---
+date | 是 | String | 月份,格式"2020-04"
+productId | 是 | String | 产品ID
+
+##### 出参
+
+参数名|非空|类型|说明
+---|---|---|---
+time | 是 | String | 消耗时间
+productName | 是 | String | 产品名
+settlementType | 是 | String | 结算方式
+uv | 是 | String | 系统UV数
+revenueUv | 是 | String | 结算UV数
+unitPrice | 是 | String | 单价
+revenueMoney | 是 | String | 结算金额
+badMoney | 是 | String | 坏账金额
+receivablesSubject | 是 | String | 结算主体
+receivablesType | 是 | String | 结算方式
+cz | 是 | String | 充值
+ye | 是 | String | 余额
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+    "list": [
+      {
+        "time": "2020-04-14",
+        "productName": "山桃街",
+        "settlementType": 1,
+        "uv": 100,
+        "revenueUv": 100,
+        "unitPrice": 10,
+        "revenueMoney": "100",
+        "badMoney": "0",
+        "receivablesSubject": "海田",
+        "receivablesType": 1,
+        "cz": "0",
+        "ye": "0"
+      }
+    ]
+  },
+  "timestamp": 1587462446394
+}
+```
+
+------
+
+#### 8.3 新增消耗
+
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/sw/insertData.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>新增消耗</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+参数名|非空|类型|说明
+---|---|---|---
+badMoney | 是 | String | 坏账金额
+belonger | 是 | String | 归属人
+productId | 是 | String | 产品ID
+receivablesSubject | 是 | String | 结算主体
+receivablesType | 是 | String | 结算类型 1 A 2 B
+remarks | 是 | String | 备注
+revenueMoney | 是 | String | 结算金额
+date | 是 | String | 时间 "2020-04-21"
+revenueUv | 是 | String | 结算UV数
+
+##### 出参
+
+无
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {},
+  "timestamp": 1587462446394
+}
+```
+
+------
+
+#### 8.4 新增充值
+
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/sw/insertCZ.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>新增充值</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+参数名|非空|类型|说明
+---|---|---|---
+productId | 是 | String | 产品ID
+receivablesSubject | 是 | String | 结算主体
+receivablesType | 是 | String | 结算类型 1 A 2 B
+remarks | 是 | String | 备注
+revenueMoney | 是 | String | 结算金额
+date | 是 | String | 时间 "2020-04-21"
+
+##### 出参
+
+无
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {},
+  "timestamp": 1587462446394
+}
+```
+
+------
+
+#### 8.5 新增开票
+
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/sw/insertBiInvoice.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>新增充值</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+参数名|非空|类型|说明
+---|---|---|---
+gongsiName | 是 | String | 公司名
+openMoney | 是 | String | 开票金额
+receivableMoney | 是 | String | 应收款金额
+receivablesSubject | 是 | String | 收款主体
+receivablesType | 是 | String | 收款类型 1A 2B
+remarks | 是 | String | 备注
+type | 是 | String | 1 专票 2 普票
+files | 是 | String | 文件路径 多个文件路劲用","拼接
+
+##### 出参
+
+无
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {},
+  "timestamp": 1587462446394
+}
+```
+
+------
+
+### 9.财务
+
+#### 9.1 商务流水
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/cw/tableInfoData.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>商务流水</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+参数名|非空|类型|说明
+---|---|---|---
+startTime | 是 | String | 开始时间
+endTime | 是 | String | 结束时间
+
+##### 出参
+
+参数名|非空|类型|说明
+---|---|---|---
+time | 是 | String | 时间
+gongsiName | 是 | String | 公司名
+type | 是 | String | 1 消耗 2 充值
+revenueMoney | 是 | String | 结算金额
+badMoney | 是 | String | 坏账
+receivablesSubject | 是 | String | 结算主体
+receivablesType | 是 | String | 1 A 2 B
+remarks | 是 | String | 备注
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+    "list": [
+      {
+        "time": "2020-04-14",
+        "gongsiName": "海田科技",
+        "type": 1,
+        "revenueMoney": "100",
+        "badMoney": "0",
+        "receivablesSubject": "海田",
+        "receivablesType": 1,
+        "remarks": ""
+      }
+    ]
+  },
+  "timestamp": 1587468257502
+}
+```
+
+------
+
+#### 9.2 商务开票记录
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/cw/SWInvoiceList.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>商务开票记录</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+参数名|非空|类型|说明
+---|---|---|---
+startTime | 是 | String | 开始时间
+endTime | 是 | String | 结束时间
+
+##### 出参
+
+参数名|非空|类型|说明
+---|---|---|---
+id | 是 | String | id
+gongsiName | 是 | String | 公司名
+type | 是 | String | 1 专票 2 普票 
+openMoney | 是 | String | 开票金额
+receivableMoney | 是 | String | 结算金额
+receivablesType | 是 | String | 结算类型
+receivablesSubject | 是 | String | 结算主体
+state | 是 | String | 0 未审核 1 通过 2 拒绝
+expressId | 是 | String | 快递单号
+remarks | 是 | String | 备注
+creatUser | 是 | String | 创建用户
+creatTime | 是 | String | 创建时间
+examineUser | 是 | String | 审核用户
+examineTime | 是 | String | 审核时间
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+    "list": [
+      {
+        "id": 1,
+        "gongsiName": "海田",
+        "type": 1,
+        "openMoney": "1000",
+        "receivableMoney": "1000",
+        "receivablesType": 1,
+        "receivablesSubject": "海田",
+        "state": 1,
+        "expressId": "476324",
+        "remarks": "备注",
+        "creatUser": 1,
+        "creatTime": "2020-04-21 19:25",
+        "examineUser": 1,
+        "examineTime": "2020-04-21 19:25"
+      }
+    ]
+  },
+  "timestamp": 1587468703876
+}
+```
+
+------
+
+#### 9.3 修改商务开票
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/cw/updateSWInvoice.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>修改商务开票</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+参数名|非空|类型|说明
+---|---|---|---
+state | 是 | String | 1 通过 2 拒绝
+expressId | 是 | String | 快递单号
+remarks | 是 | String | 备注
+files | 是 | String | 文件路径
+
+
+##### 出参
+
+无
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {},
+  "timestamp": 1587468703876
 }
 ```
 
