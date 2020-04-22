@@ -1724,7 +1724,7 @@ sample:
   <tbody>
     <tr>
       <td>URI</td>
-      <td>/xxl/appList.html</td>
+      <td>/xxl/appChannelList.html</td>
     </tr>
     <tr>
       <td>描述</td>
@@ -1781,7 +1781,7 @@ sample:
   <tbody>
     <tr>
       <td>URI</td>
-      <td>/xxl/appList.html</td>
+      <td>/xxl/insertOrUpdataApp.html</td>
     </tr>
     <tr>
       <td>描述</td>
