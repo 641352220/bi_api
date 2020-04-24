@@ -1930,6 +1930,8 @@ sample:
 
 参数名|非空|类型|说明
 ---|---|---|---
+pageNum | 是 | String| 第几页
+pageSize | 是 | String| 每页多少条
 startTime | 是 | String | 开始时间
 endTime | 是 | String | 结束时间
 productName | 是 | String | 产品名
@@ -1955,6 +1957,7 @@ belonger | 是 | String | 归属人
 productId | 是 | String | 产品ID
 cz | 是 | String | 充值
 ye | 是 | String | 营收
+count | 是 | int | 总条数
 
 sample:
 ```json
@@ -1979,7 +1982,8 @@ sample:
         "cz": "0",
         "ye": -100
       }
-    ]
+    ],
+	"count": 1
   },
   "timestamp": 1587449222157
 }
