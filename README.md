@@ -70,6 +70,8 @@
   - [x] [6.6 渠道链接列表](#66-渠道链接列表)
   - [x] [6.7 新增渠道](#67-新增渠道)
   - [x] [6.8 新增渠道链接](#68-新增渠道链接)
+  - [x] [6.9 新增消耗](#68-新增消耗)
+  - [x] [6.10 新增开票](#68-新增开票)
 - [x] 7.[安卓苹果](#8系统菜单)
   - [x] [7.1 APP列表(包名列表)](#71-APP列表(包名列表))
   - [x] [7.2 APP渠道列表(媒体列表)](#72-APP渠道列表(媒体列表))
@@ -81,10 +83,16 @@
   - [x] [8.4 新增充值](#84-新增充值)
   - [x] [8.5 新增开票](#85-新增开票)
 - [x] 9.[财务](#9财务)
-  - [x] [9.1 商务流水](#91-商务流水)
-  - [x] [9.2 商务开票记录](#92-商务开票记录)
-  - [x] [9.3 修改商务开票](#93-修改商务开票)
-
+  - [x] [9.1 首页数据](#91-首页数据)
+  - [x] [9.2 财务商务数据](#92-财务商务数据)
+  - [x] [9.3 财务商务明细数据](#93-财务商务明细数据)
+  - [x] [9.4 财务运营数据](#93-财务运营数据)
+  - [x] [9.5 财务运营明细数据](#93-财务运营明细数据)
+  - [x] [9.6 发票记录列表](#93-发票记录列表)
+  - [x] [9.7 修改发票](#93-修改发票)
+- [x] 10.[公司](#10公司)
+  - [x] [10.1 公司列表](#101-公司列表)
+  - [x] [10.2 修改或者新增](#102-修改或者新增)
 ------
 
 ### 1.登录
@@ -1627,7 +1635,7 @@ sample:
 
 ------
 
-#### 6.7 新增渠道
+#### 6.8 新增渠道链接
 <table>
   <tbody>
     <tr>
@@ -1636,7 +1644,7 @@ sample:
     </tr>
     <tr>
       <td>描述</td>
-      <td>新增渠道</td>
+      <td>新增渠道链接</td>
     </tr>
   </tbody>
 </table>
@@ -1651,6 +1659,95 @@ urlFalg | 是 | String | 链接标识
 urlFalg | 是 | String | 渠道标识
 url | 是 | String | 渠道名
 urlFalgName | 是 | String | 链接标识
+
+##### 出参
+
+无
+
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {},
+  "timestamp": 1587028932286
+}
+```
+
+------
+
+#### 6.9 新增消耗
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/xxl/insertConsume.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>新增消耗</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+参数名|非空|类型|说明
+---|---|---|---
+consumeMoney | 是 | String | 消耗金额
+consumeTime | 是 | String | 消耗时间
+gongsiId | 是 | String | 收款公司ID
+paymentGongsiId | 是 | String | 支付公司ID 
+payType | 是 | String | 1 A 2 B
+remarks | 是 | String | 备注
+channel | 是 | String | 渠道
+
+##### 出参
+
+无
+
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {},
+  "timestamp": 1587028932286
+}
+```
+
+------
+
+#### 6.10 新增开票
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/xxl/insertBiInvoice.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>新增开票</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+参数名|非空|类型|说明
+---|---|---|---
+gongsiId | 是 | String | 付款公司ID
+gongsiName | 是 | String | 付款公司名字
+openMoney | 是 | String | 开始时间
+receivableMoney | 是 | String | 应付金额
+receivableSubject | 是 | String | 收款单位
+receivableType | 是 | String | 结算类型 1 A 2 B
+receivableGongsiId  | 是 | String | 收款公司ID
+remarks | 是 | String | 备注
+type | 是 | String | 1 普票 2 专票
+files | 是 | String | 文件路径,多条用","隔开
 
 ##### 出参
 
@@ -2091,16 +2188,16 @@ sample:
 
 ### 9.财务
 
-#### 9.1 商务流水
+#### 9.1 首页数据
 <table>
   <tbody>
     <tr>
       <td>URI</td>
-      <td>/cw/tableInfoData.html</td>
+      <td>/cw/indexData.html</td>
     </tr>
     <tr>
       <td>描述</td>
-      <td>商务流水</td>
+      <td>首页数据</td>
     </tr>
   </tbody>
 </table>
@@ -2116,14 +2213,16 @@ endTime | 是 | String | 结束时间
 
 参数名|非空|类型|说明
 ---|---|---|---
-time | 是 | String | 时间
-gongsiName | 是 | String | 公司名
-type | 是 | String | 1 消耗 2 充值
-revenueMoney | 是 | String | 结算金额
-badMoney | 是 | String | 坏账
-receivablesSubject | 是 | String | 结算主体
-receivablesType | 是 | String | 1 A 2 B
-remarks | 是 | String | 备注
+imgs | 是 | List | 顶部折线图数组
+imgs.time | 是 | String | 时间
+imgs.ys | 是 | String | 营收
+imgs.xh | 是 | String | 消耗
+az | 是 | Object | 安卓
+iOS | 是 | Object | 苹果
+xxl | 是 | Object | 信息流
+wc | 是 | Object | 外采
+sem | 是 | Object | SEM
+
 
 sample:
 ```json
@@ -2131,18 +2230,23 @@ sample:
   "code": 0,
   "message": "成功",
   "data": {
-    "list": [
+    "imgs": [
       {
         "time": "2020-04-14",
-        "gongsiName": "海田科技",
-        "type": 1,
-        "revenueMoney": "100",
-        "badMoney": "0",
-        "receivablesSubject": "海田",
-        "receivablesType": 1,
-        "remarks": ""
+        "ys": 123,
+        "xh": 1
+      },
+	  {
+        "time": "2020-04-15",
+        "ys": 123,
+        "xh": 1
       }
-    ]
+    ],
+	"az":{"ys": 123,"xh": 123},
+	"iOS":{"ys": 123,"xh": 123},
+	"xxl":{"ys": 123,"xh": 123},
+	"wc":{"ys": 123,"xh": 123},
+	"sem":{"ys": 123,"xh": 123}
   },
   "timestamp": 1587468257502
 }
@@ -2150,16 +2254,16 @@ sample:
 
 ------
 
-#### 9.2 商务开票记录
+#### 9.2 财务商务数据
 <table>
   <tbody>
     <tr>
       <td>URI</td>
-      <td>/cw/SWInvoiceList.html</td>
+      <td>/cw/swData.html</td>
     </tr>
     <tr>
       <td>描述</td>
-      <td>商务开票记录</td>
+      <td>财务商务数据</td>
     </tr>
   </tbody>
 </table>
@@ -2175,20 +2279,16 @@ endTime | 是 | String | 结束时间
 
 参数名|非空|类型|说明
 ---|---|---|---
-id | 是 | String | id
-gongsiName | 是 | String | 公司名
-type | 是 | String | 1 专票 2 普票 
-openMoney | 是 | String | 开票金额
-receivableMoney | 是 | String | 结算金额
-receivablesType | 是 | String | 结算类型
-receivablesSubject | 是 | String | 结算主体
-state | 是 | String | 0 未审核 1 通过 2 拒绝
-expressId | 是 | String | 快递单号
-remarks | 是 | String | 备注
-creatUser | 是 | String | 创建用户
-creatTime | 是 | String | 创建时间
-examineUser | 是 | String | 审核用户
-examineTime | 是 | String | 审核时间
+list | 是 | List | 顶部折线图数组
+list.time | 是 | String | 时间
+list.ys | 是 | String | 营收
+list.hz | 是 | String | 坏账
+list.cz | 是 | String | 充值
+cz | 是 | String | 充值
+ys | 是 | String | 营收
+hz | 是 | String | 坏账
+kp | 是 | String | 开票金额
+nokp | 是 | String | 坏账金额
 
 sample:
 ```json
@@ -2196,22 +2296,88 @@ sample:
   "code": 0,
   "message": "成功",
   "data": {
-    "list": [
+	"list": [
       {
-        "id": 1,
+        "time": "2020-04-14",
+        "ys": 123,
+		"hz": 123,
+        "xh": 1
+      },
+	  {
+        "time": "2020-04-15",
+        "ys": 123,
+		"hz": 123,
+        "xh": 1
+      }
+    ],
+    "cz": 123,
+	"ys": 123,
+	"hz": 123,
+	"kp": 123,
+	"nokp": 123
+  },
+  "timestamp": 1587468703876
+}
+```
+
+------
+
+#### 9.3 财务商务明细数据
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/cw/swInfoData.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>财务商务明细数据</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+参数名|非空|类型|说明
+---|---|---|---
+startTime | 是 | String | 开始时间
+endTime | 是 | String | 结束时间
+
+
+##### 出参
+
+参数名|非空|类型|说明
+---|---|---|---
+list | 是 | List | 数据数组
+list.gongsiName | 是 | String | 公司名
+list.payType | 是 | String | 1A 2B
+list.collectionAccount | 是 | String | 收款账号
+list.cz | 是 | String | 充值
+list.xh | 是 | String | 消耗
+list.hz | 是 | String | 坏账
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+	"list": [
+      {
         "gongsiName": "海田",
-        "type": 1,
-        "openMoney": "1000",
-        "receivableMoney": "1000",
-        "receivablesType": 1,
-        "receivablesSubject": "海田",
-        "state": 1,
-        "expressId": "476324",
-        "remarks": "备注",
-        "creatUser": 1,
-        "creatTime": "2020-04-21 19:25",
-        "examineUser": 1,
-        "examineTime": "2020-04-21 19:25"
+        "payType": 1,
+		"collectionAccount": "人民银行",
+        "cz": 123,
+		"xh": 123,
+		"hz": 123
+      },
+	  {
+        "gongsiName": "海田",
+        "payType": 1,
+		"collectionAccount": "人民银行",
+        "cz": 123,
+		"xh": 123,
+		"hz": 123
       }
     ]
   },
@@ -2221,7 +2387,217 @@ sample:
 
 ------
 
-#### 9.3 修改商务开票
+#### 9.4 财务运营数据
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/cw/cwyyData.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>财务运营数据</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+参数名|非空|类型|说明
+---|---|---|---
+startTime | 是 | String | 开始时间
+endTime | 是 | String | 结束时间
+
+##### 出参
+
+参数名|非空|类型|说明
+---|---|---|---
+list | 是 | List | 顶部折线图数组
+list.time | 是 | String | 时间
+list.ys | 是 | String | 营收
+list.xh | 是 | String | 消耗
+az | 是 | Object | 安卓
+iOS | 是 | Object | 苹果
+xxl | 是 | Object | 信息流
+wc | 是 | Object | 外采
+sem | 是 | Object | SEM
+dk | 是 | String | 打款
+zs | 是 | String | 赠送
+xh | 是 | String | 消耗
+kp | 是 | String | 开票金额
+nokp | 是 | String | 坏账金额
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+	"list": [
+      {
+        "time": "2020-04-14",
+        "ys": 123,
+        "xh": 1
+      },
+	  {
+        "time": "2020-04-15",
+        "ys": 123,
+        "xh": 1
+      }
+    ],
+    "az":{"dk": 123,"zs": 123,"xh": 123,"kp": 123,"nokp": 123},
+	"iOS":{"dk": 123,"zs": 123,"xh": 123,"kp": 123,"nokp": 123},
+	"xxl":{"dk": 123,"zs": 123,"xh": 123,"kp": 123,"nokp": 123},
+	"wc":{"dk": 123,"zs": 123,"xh": 123,"kp": 123,"nokp": 123},
+	"sem":{"dk": 123,"zs": 123,"xh": 123,"kp": 123,"nokp": 123}
+  },
+  "timestamp": 1587468703876
+}
+```
+
+------
+
+#### 9.5 财务运营明细数据
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/cw/yyInfoData.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>财务运营明细数据</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+参数名|非空|类型|说明
+---|---|---|---
+startTime | 是 | String | 开始时间
+endTime | 是 | String | 结束时间
+
+
+##### 出参
+
+参数名|非空|类型|说明
+---|---|---|---
+list | 是 | List | 数据数组
+list.gongsiName | 是 | String | 公司名
+list.payType | 是 | String | 1A 2B
+list.collectionAccount | 是 | String | 收款账号
+list.cz | 是 | String | 充值
+list.xh | 是 | String | 消耗
+list.zs | 是 | String | 赠送
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+	"list": [
+      {
+        "gongsiName": "海田",
+        "payType": 1,
+		"collectionAccount": "人民银行",
+        "cz": 123,
+		"xh": 123,
+		"zs": 123
+      },
+	  {
+        "gongsiName": "海田",
+        "payType": 1,
+		"collectionAccount": "人民银行",
+        "cz": 123,
+		"xh": 123,
+		"zs": 123
+      }
+    ]
+  },
+  "timestamp": 1587468703876
+}
+```
+
+------
+
+#### 9.6 发票记录列表
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/cw/InvoiceList.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>发票记录列表</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+参数名|非空|类型|说明
+---|---|---|---
+startTime | 是 | String | 开始时间
+endTime | 是 | String | 结束时间
+type | 是 | int | 1 商务 2 安卓 3 苹果 4 信息流 5 公众号 6 SEM 7 外采
+
+
+##### 出参
+
+参数名|非空|类型|说明
+---|---|---|---
+id | 是 | String | 发票ID	
+gongsiName | 是 | String | 开票公司
+type | 是 | String | 1 普票 2 专票
+openMoney | 是 | String | 开票金额
+receivableMoney | 是 | String | 应收金额
+receivableType | 是 | String | 收款类型 1A 2B
+receivableGongsiId | 是 | String | 收款公司ID
+receivableSubject | 是 | String | 收款单位
+state | 是 | String | 0 待审核 1 通过 2拒绝
+expressId | 是 | String | 快递单号
+remarks | 是 | String | 备注
+creatUser | 是 | String | 创建人
+creatTime | 是 | String | 创建时间
+examineUser | 是 | String | 审核人
+examineTime | 是 | String | 审核时间
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+	"list": [
+      {
+        "id": 1,
+        "gongsiName": "海田",
+		"type": 1,
+        "openMoney": 123,
+		"receivableMoney": 123,
+		"receivableType": 1,
+		"receivableSubject": "海田",
+		"receivableGongsiId": 1,
+		"state": 1,
+		"expressId": 123,
+		"remarks": "加急",
+		"creatUser": 1,
+		"creatTime": "2020-04-24",
+		"examineUser": 123,
+		"examineTime": "2020-04-24"
+      }
+    ]
+  },
+  "timestamp": 1587468703876
+}
+```
+
+------
+
+#### 9.7 修改发票
 <table>
   <tbody>
     <tr>
@@ -2230,7 +2606,7 @@ sample:
     </tr>
     <tr>
       <td>描述</td>
-      <td>修改商务开票</td>
+      <td>发票记录列表</td>
     </tr>
   </tbody>
 </table>
@@ -2240,9 +2616,10 @@ sample:
 参数名|非空|类型|说明
 ---|---|---|---
 state | 是 | String | 1 通过 2 拒绝
-expressId | 是 | String | 快递单号
+expressId | 是 | String | 快递ID
 remarks | 是 | String | 备注
-files | 是 | String | 文件路径
+files | 是 | String | 文件路径,多条用","隔开
+
 
 
 ##### 出参
@@ -2259,4 +2636,103 @@ sample:
 }
 ```
 
+------
+
+### 10.公司
+
+#### 10.1 公司列表
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/gongsi/list.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>公司列表</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+参数名|非空|类型|说明
+---|---|---|---
+pageNum | 是 | String| 第几页
+pageSize | 是 | String| 每页多少条
+
+##### data出参
+
+参数名|非空|类型|说明
+---|---|---|---
+id | 是 | String| 公司ID
+type | 是 | String| 1 甲方 2 苹果 3 安卓 4 信息流 5 SEM 6 外采 7 公众号
+gongsiName | 是 | String| 公司名
+payType | 是 | String| 1 A 2 B
+collectionAccount | 是 | String| 收款账号
+state | 是 | String| 0 正常 1 停用
+count | 是 | String| 总数
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+    "list": [
+      {
+        "id": 1,
+        "gongsiName": "海田",
+		"type": 1,
+        "payType": 1,
+		"collectionAccount": "人民银行",
+		"state": 1
+      }
+    ],
+	"count": 123
+  },
+  "timestamp": 1552992853177
+}
+```
+------
+
+
+#### 10.2 修改或者新增
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/gongsi/update.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>修改或者新增</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+
+参数名|非空|类型|说明
+---|---|---|---
+id | 是 | String | 公司ID
+collectionAccount | 是 | String | 收款账号
+gongsiName | 是 | String | 公司名
+payType | 是 | String | 1 A 2 B
+state | 是 | String | 0 正常 1 停用
+type | 是 | String | 1 甲方 2 苹果 3 安卓 4 信息流 5 SEM 6 外采 7 公众号
+
+##### 出参
+
+无
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {},
+  "timestamp": 1586672660878
+}
+```
 ------
