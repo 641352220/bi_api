@@ -1,30 +1,28 @@
 #  API 文档
 ##### version __1.0.0__
-##### 内网接口地址 http://120.79.187.219:8080
+##### 内网接口地址 
 
 <br>
-### I ChangeLog
-
-  - 2019-3-19
-    - 初始化
-
-### II 约定
+### I 约定
 
 
 - 请求报文：
-  - appId:APP标识 第一个固定为1
-  - channel:渠道字段苹果固定为"iOS" 安卓对应渠道打包
-  - sign:data字段的签名
-  - v:版本号 每个APP的初始值为1
-  - token:登录标识
+  - uid: 每个设备的唯一标识,不变且唯一
+  - appId: 每个应用的ID
+  - os:平台 Android / iOS
+  - channel: 渠道(由后台给)
+  - token:用户的登录标识
+  - version:版本 内部版本 初始化为1 整形 每打次包加一
   - data:json类型  所有的入参都放里面
-  - data.timestamp:时间戳 每次请求都要传(设备本地的当前时间戳)
+  - data.timestamp:时间戳 每次请求都要传
 ```json
 {
-  "appId": 1,  
-  "channel": "iOS",  
-  "v": 1,  
-  "token": "8edb3d300e754bad9d0e97da6d6c781e",  
+  "uid": "a29cf5f84ad64ab1a5dbc5a58ca53628",
+  "appid": 1,
+  "os": "Android",
+  "channel": 1,
+  "token": "8edb3d300e754bad9d0e97da6d6c781e",
+  "version": 1,
   "sign": "8edb3d300e754bad9d0e97da6d6c781e",
   "data": "{'timestamp':'524357435743574'}"
 }
@@ -32,8 +30,8 @@
 
 
 - 返回报文：
-  - code: 返回的状态码 全局的状态码(0 成功 1失败 33登录过期(跳转至登录页面) 55 验签失败)
-  - message:提示信息(如果失败终端直接用后端返回的提示信息)
+  - code: 返回的状态码 全局的状态码(0 成功 1失败 33token过期 44 时间戳过期 55 验签失败)
+  - message:提示信息
   - timestamp: 时间戳
   - data:json类型  所有的出参都在里面
 ```json
@@ -45,36 +43,27 @@
 }
 ```
 
-### III 静态页面地址
-- 帮助中心：http://120.79.187.219:8080/html/question.html?app=1
-- 用户协议：http://120.79.187.219:8080/html/serviceProvision.html?app=1
-- 商务合作：http://120.79.187.219:8080/html/cooperation.html?app=1
-
-### III 目录
-- [x] 1.[页面相关](#1页面相关)
-  - [x] [1.1 首页](#11-首页)
-  - [x] [1.2 产品列表](#12-产品列表)
-  - [x] [1.3 产品详情](#13-产品详情)
-  - [x] [1.4 点击记录列表](#14-点击记录列表)
-  - [x] [1.5 贷款列表处的借款类型](#15-贷款列表处的借款类型)
-  - [x] [1.6 ab面切换](#16-ab面切换)
-- [x] 2.[验证码相关](#2验证码相关)
-  - [x] [2.1 短信验证码登录验证码](#21-短信验证码登录验证码)
-  - [x] [2.2 忘记密码验证码](#22-忘记密码验证码)
-  - [x] [2.3 图形验证码](#23-图形验证码)
-- [x] 3.[用户相关](#3用户相关)
-  - [x] [3.1 验证码登录](#31-验证码登录)
-  - [x] [3.2 密码登录](#32-密码登录)
-  - [x] [3.3 忘记密码](#33-忘记密码)
-  - [x] [3.4 新增点击记录](#34-新增点击记录)
+### II 目录
+- [x] 1.[页面接口](#1页面接口)
+  - [x] [1.1 首页数据](#11-会员特权列表)
+  - [x] [1.2 别的地方广告数据](#12-别的地方广告数据)
+  - [x] [1.3 产品列表数据](#13-产品列表数据)
+  - [x] [1.4 获取产品链接并增加UV](#14-获取产品链接并增加UV)
+  - [x] [1.5 点击记录列表数据](#15-点击记录列表数据)
+  - [x] [1.6 新增反馈](#16-新增反馈)
+  - [x] [1.7 获取APP信息](#17-获取APP信息)
+- [x] 2.[其他](#2其他)
+  - [x] [2.1 图形码](#21-图形码)
+  - [x] [2.2 登录短信验证码](#22-登录短信验证码)
+  - [x] [2.3 验证码登录](#23-验证码登录)
 
 
 
 ------
 
-### 1.页面信息
+### 1.页面接口
 
-#### 1.1 首页
+#### 1.1 首页数据
 <table>
   <tbody>
     <tr>
@@ -83,7 +72,375 @@
     </tr>
     <tr>
       <td>描述</td>
-      <td>获取首页数据</td>
+      <td>首页的所有数据</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+参数名|非空|类型|说明
+---|---|---|---
+pageNum | 是 | int| 第几页,初始值为1
+pageSize | 是 | int| 每页多少条
+
+##### data出参
+
+参数名|非空|类型|说明
+---|---|---|---
+bannerList | 是 | 数组| banner数据
+bannerList.imgUrl | 是 | String| 图片地址
+bannerList.title | 是 | String| 标题(可忽略,扩展字段)
+bannerList.productId | 是 | int| 产品ID(内链产品时,通过该ID去调产品详情获取URL跳转网页)
+bannerList.type | 是 | int| 类型(1内链产品 2外链(打开下面的bannerList.url链接) 3内链产品列表(拓展类型))可以根据自身情况,在终端写死,除非类型为1否则其他类型不可点击
+bannerList.url | 是 | String| 图片地址
+informationsList | 是 | 数组| 轮播信息
+informationsList.content | 是 | String| 轮播内容
+informationsList.productId | 是 | int| 产品ID
+typeList | 是 | 数组| 小广告数据
+bannerList.imgUrl | 是 | String| 图片地址
+bannerList.name | 是 | String| 标题(可忽略,扩展字段)
+bannerList.productId | 是 | int| 产品ID(内链产品时,通过该ID去调产品详情获取URL跳转网页)
+bannerList.type | 是 | int| 类型(1内链产品 2外链(打开下面的bannerList.url链接) 3内链产品列表(拓展类型))可以根据自身情况,在终端写死,除非类型为1否则其他类型不可点击
+bannerList.url | 是 | String| 图片地址
+jrtjList | 是 | 数组| 推荐产品数据
+jrtjList.imgUrl | 是 | String| 图片地址
+jrtjList.name | 是 | String| 产品名
+jrtjList.productId | 是 | int| 产品ID
+jrtjList.rateType | 是 | int| 计息类型1 按日 2 按月
+jrtjList.adver | 是 | String| 广告语
+jrtjList.moneyMax | 是 | String| 可贷最大金额
+jrtjList.moneyMin | 是 | String| 可贷最小金额
+jrtjList.rateMin | 是 | String| 最低利率
+jrtjList.loanNum | 是 | String| 下款人数
+jrtjList.dayMax | 是 | String| 可贷最长期限(单位天)
+jrtjList.loanTime | 是 | String| 下款时间(单位分钟)
+jrtjList.label | 是 | String| 标签
+jrtjList.labels | 是 | 数组| 标签数组
+productList | 是 | 数组| 推荐产品数据
+productList.imgUrl | 是 | String| 图片地址
+productList.name | 是 | String| 产品名
+productList.productId | 是 | int| 产品ID
+productList.rateType | 是 | int| 计息类型1 按日 2 按月
+productList.adver | 是 | String| 广告语
+productList.moneyMax | 是 | String| 可贷最大金额
+productList.moneyMin | 是 | String| 可贷最小金额
+productList.rateMin | 是 | String| 最低利率
+productList.loanNum | 是 | String| 下款人数
+productList.dayMax | 是 | String| 可贷最长期限(单位天)
+productList.loanTime | 是 | String| 下款时间(单位分钟)
+productList.label | 是 | String| 标签
+productList.labels | 是 | 数组| 标签数组
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+    "bannerList": [
+      {
+        "imgUrl": "https://wyd-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1507518998070.png",
+        "title": "秒下款",
+		"productId": 1,
+		"type": 1,
+        "url": "http://www.baidu.com"
+      },
+	  {
+        "imgUrl": "https://wyd-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1507518998070.png",
+        "title": "下款快",
+		"productId": 1,
+		"type": 1,
+        "url": "http://www.baidu.com"
+      }
+    ],
+    "informationsList": [
+      {
+        "content": "恭喜上海的王先生在如意贷下款3000元",
+		"productId": 1
+      },
+	  {
+        "content": "恭喜上海的王先生在如意贷下款3000元",
+		"productId": 2
+      }
+    ],
+	"typeList": [
+      {
+        "imgUrl": "https://wyd-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1507518998070.png",
+        "name": "秒下款",
+		"productId": 1,
+		"type": 1,
+        "url": "http://www.baidu.com"
+      },
+	  {
+        "imgUrl": "https://wyd-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1507518998070.png",
+        "name": "下款快",
+		"productId": 1,
+		"type": 1,
+        "url": "http://www.baidu.com"
+      }
+    ],
+	"jrtjList": [
+      {
+        "imgUrl": "https://wyd-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1507518998070.png",
+        "name": "秒下款",
+		"productId": 1,
+		"rateType": 1,
+		"adver": "秒下款",
+		"moneyMax": "10000",
+		"moneyMin": "1000",
+		"rateMin": "0.3",
+		"loanNum": "123432",
+		"dayMax": "360",
+		"loanTime": "5",
+		"label": "下款快",
+		"labels": ["额度高哦","下款快"]
+      },
+	  {
+        "imgUrl": "https://wyd-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1507518998070.png",
+        "name": "秒下款",
+		"productId": 2,
+		"rateType": 1,
+		"adver": "秒下款",
+		"moneyMax": "10000",
+		"moneyMin": "1000",
+		"rateMin": "0.3",
+		"loanNum": "123432",
+		"dayMax": "360",
+		"loanTime": "5",
+		"label": "下款快",
+		"labels": ["额度高哦","下款快"]
+      }
+    ],
+	"productList": [
+      {
+        "imgUrl": "https://wyd-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1507518998070.png",
+        "name": "秒下款",
+		"productId": 1,
+		"rateType": 1,
+		"adver": "秒下款",
+		"moneyMax": "10000",
+		"moneyMin": "1000",
+		"rateMin": "0.3",
+		"loanNum": "123432",
+		"dayMax": "360",
+		"loanTime": "5",
+		"label": "下款快",
+		"labels": ["额度高哦","下款快"]
+      },
+	  {
+        "imgUrl": "https://wyd-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1507518998070.png",
+        "name": "秒下款",
+		"productId": 2,
+		"rateType": 1,
+		"adver": "秒下款",
+		"moneyMax": "10000",
+		"moneyMin": "1000",
+		"rateMin": "0.3",
+		"loanNum": "123432",
+		"dayMax": "360",
+		"loanTime": "5",
+		"label": "下款快",
+		"labels": ["额度高哦","下款快"]
+      }
+    ]
+  },
+  "timestamp": 1514535058890
+}
+```
+------
+
+
+#### 1.2 别的地方广告数据
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/page/typeListPage.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>别的地方广告数据</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+参数名|非空|类型|说明
+---|---|---|---
+typePosition | 是 | int| 位置标识1首页 2列表 3个人中心
+
+##### data出参
+
+参数名|非空|类型|说明
+---|---|---|---
+id | 是 | String| 会员套餐ID
+content | 是 | String| 说明
+adver | 是 | String| 广告语
+originalPrice | 是 | String| 原价
+concessionalRate | 是 | String| 优惠价
+
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+	"typeList": [
+      {
+        "imgUrl": "https://wyd-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1507518998070.png",
+        "name": "秒下款",
+		"productId": 1,
+		"type": 1,
+        "url": "http://www.baidu.com"
+      },
+	  {
+        "imgUrl": "https://wyd-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1507518998070.png",
+        "name": "下款快",
+		"productId": 1,
+		"type": 1,
+        "url": "http://www.baidu.com"
+      }
+    ]
+  },
+  "timestamp": 1514535058890
+}
+```
+------
+
+#### 1.3 产品列表数据
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/page/productListPage.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>产品列表数据</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+参数名|非空|类型|说明
+---|---|---|---
+pageNum | 是 | int| 第几页,初始值为1
+pageSize | 是 | int| 每页多少条
+
+##### data出参
+
+参数名|非空|类型|说明
+---|---|---|---
+productList | 是 | 数组| 推荐产品数据
+productList.imgUrl | 是 | String| 图片地址
+productList.name | 是 | String| 产品名
+productList.productId | 是 | int| 产品ID
+productList.rateType | 是 | int| 计息类型1 按日 2 按月
+productList.adver | 是 | String| 广告语
+productList.moneyMax | 是 | String| 可贷最大金额
+productList.moneyMin | 是 | String| 可贷最小金额
+productList.rateMin | 是 | String| 最低利率
+productList.loanNum | 是 | String| 下款人数
+productList.dayMax | 是 | String| 可贷最长期限(单位天)
+productList.loanTime | 是 | String| 下款时间(单位分钟)
+productList.label | 是 | String| 标签
+productList.labels | 是 | 数组| 标签数组
+
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+	"productList": [
+      {
+        "imgUrl": "https://wyd-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1507518998070.png",
+        "name": "秒下款",
+		"productId": 1,
+		"rateType": 1,
+		"adver": "秒下款",
+		"moneyMax": "10000",
+		"moneyMin": "1000",
+		"rateMin": "0.3",
+		"loanNum": "123432",
+		"dayMax": "360",
+		"loanTime": "5",
+		"label": "下款快",
+		"labels": ["额度高哦","下款快"]
+      },
+	  {
+        "imgUrl": "https://wyd-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1507518998070.png",
+        "name": "秒下款",
+		"productId": 2,
+		"rateType": 1,
+		"adver": "秒下款",
+		"moneyMax": "10000",
+		"moneyMin": "1000",
+		"rateMin": "0.3",
+		"loanNum": "123432",
+		"dayMax": "360",
+		"loanTime": "5",
+		"label": "下款快",
+		"labels": ["额度高哦","下款快"]
+      }
+    ]
+  },
+  "timestamp": 1514535058890
+}
+```
+------
+
+#### 1.4 获取产品链接并增加UV
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/page/GetProductUrl.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>获取产品链接并增加UV</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data
+参数名|非空|类型|说明
+---|---|---|---
+productId | 是 | int| 产品ID
+
+##### data出参
+
+参数名|非空|类型|说明
+---|---|---|---
+url | 是 | String| 产品链接
+
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+	"url": "http://www.baidu.com"
+  },
+  "timestamp": 1514535058890
+}
+```
+------
+
+#### 1.5 点击记录列表数据
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/user/UvListPage.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>点击记录列表数据</td>
     </tr>
   </tbody>
 </table>
@@ -95,45 +452,21 @@
 
 参数名|非空|类型|说明
 ---|---|---|---
-bannerList | 是 | List| banner数组
-bannerList.title | 是 | String| 标题(跳转外链的时候,顶部用这个字段)
-bannerList.imgUrl | 是 | String| 图片地址
-bannerList.type | 是 | int| 1 内链产品详情 2外链打开链接 3 产品列表
-bannerList.productId | 是 | int| 产品ID
-bannerList.url | 是 | String| 外链地址
-bannerList.listImgUrl | 是 | String| 列表图片地址  (为空得话就隐藏顶部得图片)
-bannerList.listUrl | 是 | String| 列表图片点击链接地址  (为空得话就没有点击事件)
-bannerList.listType | 是 | String| 列表类型(用于产品列表得中的listType入参)
-informationsList | 是 | List| 轮播数组
-informationsList.content | 是 | String| 轮播内容
-informationsList.productId | 是 | int| 产品ID
-typeList | 是 | List| 类型数组
-typeList.name | 是 | String| 类型名字
-typeList.typeId | 是 | int| 类型ID
-typeId.listImgUrl | 是 | String| 列表图片地址  (为空得话就隐藏顶部得图片)
-typeId.listUrl | 是 | String| 列表图片点击链接地址  (为空得话就没有点击事件)
-typeId.listType | 是 | String| 列表类型(用于产品列表得中的listType入参)
-jrtjList | 是 | List| banner数组
-jrtjList.name | 是 | String| 产品名
-jrtjList.imgUrl | 是 | String| 图片地址
-jrtjList.adver | 是 | String| 广告语
-jrtjList.productId | 是 | int| 产品ID
-jrtjList.moneyMax | 是 | int| 最大金额
-jrtjList.moneyMin | 是 | int| 最小金额
-jrtjList.rateMin | 是 | int| 最低利率
-jrtjList.rateType | 是 | int| 利率类型
-jrtjList.loanNum | 是 | int| 申请数(也是下款数)
-rmList | 是 | List| banner数组
-rmList.name | 是 | String| 产品名
-rmList.imgUrl | 是 | String| 图片地址
-rmList.adver | 是 | String| 广告语
-rmList.productId | 是 | int| 产品ID
-rmList.label | 是 | String| 标签文本
-rmList.moneyMax | 是 | int| 最大金额
-rmList.moneyMin | 是 | int| 最小金额
-rmList.rateMin | 是 | int| 最低利率
-rmList.rateType | 是 | int| 利率类型
-rmList.loanNum | 是 | int| 申请数(也是下款数)
+productList | 是 | 数组| 推荐产品数据
+productList.imgUrl | 是 | String| 图片地址
+productList.name | 是 | String| 产品名
+productList.productId | 是 | int| 产品ID
+productList.rateType | 是 | int| 计息类型1 按日 2 按月
+productList.adver | 是 | String| 广告语
+productList.moneyMax | 是 | String| 可贷最大金额
+productList.moneyMin | 是 | String| 可贷最小金额
+productList.rateMin | 是 | String| 最低利率
+productList.loanNum | 是 | String| 下款人数
+productList.dayMax | 是 | String| 可贷最长期限(单位天)
+productList.loanTime | 是 | String| 下款时间(单位分钟)
+productList.label | 是 | String| 标签
+productList.labels | 是 | 数组| 标签数组
+
 
 sample:
 ```json
@@ -141,543 +474,66 @@ sample:
   "code": 0,
   "message": "成功",
   "data": {
-    "bannerList": [
+	"productList": [
       {
-        "title": "banner",
-        "imgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1546597345872.jpg",
-        "type": 1,
-        "productId": 1,
-        "url": "http://www.baidu.com",
-		"listImgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1546597345872.jpg",
-		"listUrl": "http://www.baidu.com",
-		"listType": 1
-      },
-      {
-        "title": "banner",
-        "imgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1546597345872.jpg",
-        "type": 2,
-        "productId": 1,
-        "url": "http://www.baidu.com",
-		"listImgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1546597345872.jpg",
-		"listUrl": "http://www.baidu.com",
-		"listType": 1
-      }
-    ],
-    "informationsList": [
-      {
-        "content": "轮播内容1",
-        "productId": 1
-      },
-      {
-        "content": "轮播内容2",
-        "productId": 2
-      }
-    ],
-    "typeList": [
-      {
-        "name": "学生贷",
-        "typeId": 1,
-		"listImgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1546597345872.jpg",
-		"listUrl": "http://www.baidu.com",
-		"listType": 1
-      },
-      {
-        "name": "工薪贷",
-        "typeId": 2,
-		"listImgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1546597345872.jpg",
-		"listUrl": "http://www.baidu.com",
-		"listType": 1
-      },
-      {
-        "name": "企业贷",
-        "typeId": 3,
-		"listImgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1546597345872.jpg",
-		"listUrl": "http://www.baidu.com",
-		"listType": 1
-      }
-    ],
-    "jrtjList": [
-      {
-        "name": "产品名1",
-        "productId": 1,
-        "imgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//product/logo/1551449524295.jpg",
-        "adver": "广告语",
-		"moneyMax": 111,
-		"moneyMin": 1,
-		"rateMin": 0.2,
+        "imgUrl": "https://wyd-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1507518998070.png",
+        "name": "秒下款",
+		"productId": 1,
 		"rateType": 1,
-		"loanNum": 12345
+		"adver": "秒下款",
+		"moneyMax": "10000",
+		"moneyMin": "1000",
+		"rateMin": "0.3",
+		"loanNum": "123432",
+		"dayMax": "360",
+		"loanTime": "5",
+		"label": "下款快",
+		"labels": ["额度高哦","下款快"]
       },
-      {
-        "name": "产品名2",
-        "productId": 2,
-        "imgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//product/logo/1551449524295.jpg",
-        "adver": "广告语",
-		"moneyMax": 111,
-		"moneyMin": 1,
-		"rateMin": 0.2,
+	  {
+        "imgUrl": "https://wyd-pro.oss-cn-shenzhen.aliyuncs.com//banner/img/1507518998070.png",
+        "name": "秒下款",
+		"productId": 2,
 		"rateType": 1,
-		"loanNum": 12345
-      },
-      {
-        "name": "产品名3",
-        "productId": 3,
-        "imgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//product/logo/1551449524295.jpg",
-        "adver": "广告语",
-		"moneyMax": 111,
-		"moneyMin": 1,
-		"rateMin": 0.2,
-		"rateType": 1,
-		"loanNum": 12345
-      },
-      {
-        "name": "产品名4",
-        "productId": 4,
-        "imgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//product/logo/1551449524295.jpg",
-        "adver": "广告语",
-		"moneyMax": 111,
-		"moneyMin": 1,
-		"rateMin": 0.2,
-		"rateType": 1,
-		"loanNum": 12345
-      }
-    ],
-    "rmList": [
-      {
-        "name": "产品名1",
-        "productId": 1,
-        "imgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//product/logo/1551449524295.jpg",
-        "adver": "广告语",
-        "label": "热门",
-		"moneyMax": 111,
-		"moneyMin": 1,
-		"rateMin": 0.2,
-		"rateType": 1,
-		"loanNum": 12345
-      },
-      {
-        "name": "产品名2",
-        "productId": 2,
-        "imgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//product/logo/1551449524295.jpg",
-        "adver": "广告语",
-        "label": "",
-		"moneyMax": 111,
-		"moneyMin": 1,
-		"rateMin": 0.2,
-		"rateType": 1,
-		"loanNum": 12345
-      },
-      {
-        "name": "产品名3",
-        "productId": 3,
-        "imgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//product/logo/1551449524295.jpg",
-        "adver": "广告语",
-        "label": "热门",
-		"moneyMax": 111,
-		"moneyMin": 1,
-		"rateMin": 0.2,
-		"rateType": 1,
-		"loanNum": 12345
-      },
-      {
-        "name": "产品名4",
-        "productId": 4,
-        "imgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//product/logo/1551449524295.jpg",
-        "adver": "广告语",
-        "label": "",
-		"moneyMax": 111,
-		"moneyMin": 1,
-		"rateMin": 0.2,
-		"rateType": 1,
-		"loanNum": 12345
+		"adver": "秒下款",
+		"moneyMax": "10000",
+		"moneyMin": "1000",
+		"rateMin": "0.3",
+		"loanNum": "123432",
+		"dayMax": "360",
+		"loanTime": "5",
+		"label": "下款快",
+		"labels": ["额度高哦","下款快"]
       }
     ]
   },
-  "timestamp": 1552992853177
+  "timestamp": 1514535058890
 }
 ```
 ------
 
-
-#### 1.2 产品列表
+#### 1.6 新增反馈
 <table>
   <tbody>
     <tr>
       <td>URI</td>
-      <td>/page/productListPage.html</td>
+      <td>/insertFk.html</td>
     </tr>
     <tr>
       <td>描述</td>
-      <td>产品列表</td>
+      <td>新增反馈</td>
     </tr>
   </tbody>
 </table>
 
 ##### data入参
-
 参数名|非空|类型|说明
 ---|---|---|---
-pageNum | 是 | int | 页数从1开始
-pageSize | 是 | int | 每页多少条 暂定10条
-moneyMin | 是 | int | 最小金额(0为不限制最小)
-moneyMax | 是 | int | 最大金额(0为不限制最大)
-typeId | 是 | int | 类型ID 0为全部
-sort | 是 | int | 排序 0 默认排序 1 成功率高 2 利率低 3 额度高 4放款快
-bannerId | 是 | int | banner点击跳转列表的时候
-listType | 是 | int | 列表类型(banner或者类型点击的时候传对应的值),没有就默认传0
+content | 是 | String | 用户反馈内容
+
 
 ##### 出参
-
-参数名|非空|类型|说明
----|---|---|---
-dataList | 是 | String | 产品数组
-dataList.name | 是 | String | 产品名
-dataList.productId | 是 | String | 产品ID
-dataList.imgUrl | 是 | String | 产品logo
-dataList.adver | 是 | String | 广告语
-dataList.moneyMax | 是 | String | 最小金额
-dataList.rateMin | 是 | String | 最低利率  直接后面加%
-dataList.rateType | 是 | String | 利率类型 1 日利率 2 月利率  
-dataList.success | 是 | String | 成功率 直接再后面加%
-dataList.loanNum | 是 | String | 下款人数(申请人数)
-dataList.label | 是 | String | 标签文本
-dataCount | 是 | String | 数据总数(用于分页)
-
-sample:
-```json
-{
-  "code": 0,
-  "message": "成功",
-  "data": {
-    "dataList": [
-      {
-        "name": "产品名1",
-        "productId": 1,
-        "imgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//product/logo/1551449524295.jpg",
-        "adver": "广告语",
-        "moneyMax": 100000,
-		"loanNum": 100000,
-        "rateMin": 0.02,
-        "rateType": 1,
-        "success": 88,
-        "label": "热门"
-      },
-      {
-        "name": "产品名2",
-        "productId": 2,
-        "imgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//product/logo/1551449524295.jpg",
-        "adver": "广告语",
-        "moneyMax": 100000,
-		"loanNum": 100000,
-        "rateMin": 0.02,
-        "rateType": 1,
-        "success": 88,
-        "label": ""
-      }
-    ],
-    "dataCount": 2
-  },
-  "timestamp": 1552993913106
-}
-```
-------
-
-#### 1.3 产品详情
-<table>
-  <tbody>
-    <tr>
-      <td>URI</td>
-      <td>/page/productInfoPage.html</td>
-    </tr>
-    <tr>
-      <td>描述</td>
-      <td>产品详情</td>
-    </tr>
-  </tbody>
-</table>
-
-##### data入参
-参数名|非空|类型|说明
----|---|---|---
-productId | 是 | int| 产品ID
-
-##### 出参
-
-参数名|非空|类型|说明
----|---|---|---
-productId | 是 | int| 产品ID
-rateType | 是 | int | 利率类型 1 日利率 2 月利率  
-name | 是 | String | 产品名
-moneyMin | 是 | int | 最小金额 单位元(注意千万转化)
-moneyMax | 是 | int | 最大金额 单位元(注意千万转化)
-dayMin | 是 | int | 最小天数 注意月年转化
-dayMax | 是 | int | 最大天数 注意月年转化
-rateMin | 是 | double | 最小利率 直接加%
-rateMax | 是 | double | 最大利率 直接加%
-loanTime | 是 | int | 下款时间  单位分钟 注意小时转化
-success | 是 | double | 成功率 直接再后面加%
-loanNum | 是 | int | 下款人数 不用转化  直接显示出来
-adver | 是 | String | 广告语
-applicationConditions | 是 | String | 申请条件
-requiredMaterials | 是 | String | 所需材料
-applicationProcess | 是 | String | 申请流程
-imgUrl | 是 | String | 图片地址
-url | 是 | String | 申请地址
-
-
-
-sample:
-```json
-{
-  "code": 0,
-  "message": "成功",
-  "data": {
-    "productId": 1,
-    "rateType": 1,
-    "name": "产品名1",
-    "moneyMin": 100,
-    "moneyMax": 100000,
-    "dayMin": 7,
-    "dayMax": 360,
-    "rateMin": 0.02,
-    "rateMax": 0.03,
-    "loanTime": 5,
-    "success": 88,
-    "loanNum": 435345,
-    "adver": "广告语",
-    "applicationConditions": "申请条件",
-    "requiredMaterials": "所需材料",
-    "applicationProcess": "申请条件",
-    "imgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//product/logo/1551449524295.jpg",
-    "url": "http://www.baidu.com"
-  },
-  "timestamp": 1552994174264
-}
-```
-
-------
-
-#### 1.4 点击记录列表
-<table>
-  <tbody>
-    <tr>
-      <td>URI</td>
-      <td>/page/loanRecordListPage.html</td>
-    </tr>
-    <tr>
-      <td>描述</td>
-      <td>点击记录列表</td>
-    </tr>
-  </tbody>
-</table>
-
-##### data入参
-
-参数名|非空|类型|说明
----|---|---|---
-pageNum | 是 | int | 页数从1开始
-pageSize | 是 | int | 每页多少条 暂定10条
-
-##### 出参
-
-参数名|非空|类型|说明
----|---|---|---
-dataList | 是 | String | 产品数组
-dataList.name | 是 | String | 产品名
-dataList.productId | 是 | String | 产品ID
-dataList.imgUrl | 是 | String | 产品logo
-dataList.url | 是 | String | 链接地址
-dataList.time | 是 | String | 申请时间
-
-sample:
-```json
-{
-  "code": 0,
-  "message": "成功",
-  "data": {
-    "dataList": [
-      {
-        "name": "产品名1",
-        "productId": 1,
-        "imgUrl": "http://hyj-pro.oss-cn-shenzhen.aliyuncs.com//product/logo/1551449524295.jpg",
-        "url": "http://www.baidu.com",
-        "time": "2019-03-19 19:04"
-      }
-    ],
-    "dataCount": 1
-  },
-  "timestamp": 1552994582253
-}
-```
-------
-
-#### 1.5 贷款列表处的借款类型
-<table>
-  <tbody>
-    <tr>
-      <td>URI</td>
-      <td>/page/typeList.html</td>
-    </tr>
-    <tr>
-      <td>描述</td>
-      <td>贷款列表处的借款类型</td>
-    </tr>
-  </tbody>
-</table>
-
-##### data入参
 无
-
-##### 出参
-
-参数名|非空|类型|说明
----|---|---|---
-dataList | 是 | String | 类型数组
-dataList.name | 是 | String | 类型名
-dataList.typeId | 是 | int | 类型ID
-
-sample:
-```json
-{
-  "code": 0,
-  "message": "成功",
-  "data": {
-    "dataList": [
-      {
-        "name": "额度高",
-        "typeId": 4
-      },
-      {
-        "name": "下款快",
-        "typeId": 5
-      },
-      {
-        "name": "期限长",
-        "typeId": 6
-      },
-      {
-        "name": "通过率高",
-        "typeId": 7
-      }
-    ]
-  },
-  "timestamp": 1552994943117
-}
-```
-------
-
-#### 1.6 ab面切换
-<table>
-  <tbody>
-    <tr>
-      <td>URI</td>
-      <td>/ab.html</td>
-    </tr>
-    <tr>
-      <td>描述</td>
-      <td>ab面切换</td>
-    </tr>
-  </tbody>
-</table>
-
-##### data入参
-无
-
-##### 出参
-
-参数名|非空|类型|说明
----|---|---|---
-ab | 是 | int | 0正常页面 1 审核页面
-
-sample:
-```json
-{
-  "code": 0,
-  "message": "成功",
-  "data": {
-    "ab": 0
-  },
-  "timestamp": 1552994943117
-}
-```
-------
-
-### 2.验证码相关
-
-#### 2.1 短信验证码登录验证码
-<table>
-  <tbody>
-    <tr>
-      <td>URI</td>
-      <td>/code/loginCode.html</td>
-    </tr>
-    <tr>
-      <td>描述</td>
-      <td>获取短信验证码登录验证码</td>
-    </tr>
-  </tbody>
-</table>
-
-##### data入参
-
-参数名|非空|类型|说明
----|---|---|---
-phone | 是 | String |手机号
-
-
-##### 出参
-
-参数名|非空|类型|说明
----|---|---|---
-code | 是 | int| 返回代码 如果返回的不是成功需要刷新一下图形验证码的
-message | 是 | String | 返回说明
-data | 是 | Object | 返回数据字段
-timestamp | 是 | Long | 服务器时间戳
-key | 是 | String |图形验证码的key
-imgCode | 是 | String |用户输的图形验证码
-
-sample:
-```json
-{
-  "code": 0,
-  "message": "成功",
-  "data": {},
-  "timestamp": 1514860681309
-}
-```
-
-------
-
-#### 2.2 忘记密码验证码
-<table>
-  <tbody>
-    <tr>
-      <td>URI</td>
-      <td>/code/forgetCode.html</td>
-    </tr>
-    <tr>
-      <td>描述</td>
-      <td>忘记密码验证码</td>
-    </tr>
-  </tbody>
-</table>
-
-##### data入参
-
-参数名|非空|类型|说明
----|---|---|---
-phone | 是 | String |手机号
-key | 是 | String |图形验证码的key
-imgCode | 是 | String |用户输的图形验证码
-
-##### 出参
-
-参数名|非空|类型|说明
----|---|---|---
-code | 是 | int| 返回代码  如果返回的不是成功需要刷新一下图形验证码的
-message | 是 | String | 返回说明
-data | 是 | Object | 返回数据字段
-timestamp | 是 | Long | 服务器时间戳
 
 
 sample:
@@ -686,13 +542,53 @@ sample:
   "code": 0,
   "message": "成功",
   "data": {},
-  "timestamp": 1514860681309
+  "timestamp": 1514535058890
 }
 ```
-
 ------
 
-#### 2.3 图形验证码
+#### 1.7 获取APP信息
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/getAppInfo.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>获取APP信息,主要就是AB面</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+无
+
+##### data出参
+
+参数名|非空|类型|说明
+---|---|---|---
+ab | 是 | int| 0正常页面 1审核页面
+KfUrl | 是 | String| 客服地址
+
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+	"ab": 0,
+	"KfUrl": "http://www.baidu.com"
+  },
+  "timestamp": 1514535058890
+}
+```
+------
+
+### 2.其他
+
+#### 2.1 图形码
 <table>
   <tbody>
     <tr>
@@ -701,27 +597,21 @@ sample:
     </tr>
     <tr>
       <td>描述</td>
-      <td>图形验证码</td>
+      <td>图形码</td>
     </tr>
   </tbody>
 </table>
 
-##### data入参
+##### 入参
+无
+
+
+##### data出参新增参数
 
 参数名|非空|类型|说明
 ---|---|---|---
-phone | 是 | String |手机号
-
-##### 出参
-
-参数名|非空|类型|说明
----|---|---|---
-code | 是 | int| 返回代码
-message | 是 | String | 返回说明
-data | 是 | Object | 返回数据字段
-timestamp | 是 | Long | 服务器时间戳
-data.imgCode | 是 | String | 图片流(base64之后的)
-data.key | 是 | String | 图片验证码的key
+key | 是 | String | 该图形码的key
+imgCode | 是 | String | 二进制的图片流
 
 sample:
 ```json
@@ -729,18 +619,53 @@ sample:
   "code": 0,
   "message": "成功",
   "data": {
-	"imgCode": "assfsdhfuosdndifbgsdfbsjkdbf",
-	"key": 12435435464557567
+	"key": "sfgdskfsdghdshjfdsgj",
+	"imgCode": "sfgdskfsdghdshjfdsgj"
   },
-  "timestamp": 1514860681309
+  "timestamp": 1514535058890
+}
+```
+------
+
+#### 2.2 登录短信验证码
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/code/loginCode.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>登录短信验证码</td>
+    </tr>
+  </tbody>
+</table>
+
+##### 入参
+参数名|非空|类型|说明
+---|---|---|---
+phone | 是 | String | 手机号
+key | 是 | String | 图形码的key(后端反回的)
+imgCode | 是 | String | 用户输的码
+
+
+##### data出参
+
+可以不用调用图形码的接口直接调用该接口,不调用的话key和imgCode不传就行,但是如果后端返回状态码为1的时候就必须调用,因为后端逻辑为一个手机号10分钟内可以免图形码调用两次。
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {},
+  "timestamp": 1514535058890
 }
 ```
 
 ------
 
-### 3.用户相关
-
-#### 3.1  验证码登录
+#### 2.3 验证码登录
 <table>
   <tbody>
     <tr>
@@ -757,21 +682,18 @@ sample:
 ##### data入参
 参数名|非空|类型|说明
 ---|---|---|---
-phone | 是 | String| 手机号
-code | 是 | String| 短信码
+phone | 是 | String | 手机号
+code | 是 | String | 短信码
+jingdu | 是 | String | 用户注册的时候的经度(非必传)
+loginType | 是 | String | 登录类型 0 正常登录 1 一键登录 (根据情况固定0就行)
+weidu | 是 | String | 用户注册的时候的纬度(非必传)
 
 
+##### data出参
 
-##### 出参
 参数名|非空|类型|说明
 ---|---|---|---
-code | 是 | int| 返回代码
-message | 是 | String | 返回说明
-data | 是 | Object | 返回数据字段
-timestamp | 是 | Long | 服务器时间戳
-token | 是 | String | 登录标识,把该标识放到请求字段中的token处
-
-
+token | 是 | String | 登录标识,后续的所有接口必须带上这个token
 
 sample:
 ```json
@@ -779,146 +701,10 @@ sample:
   "code": 0,
   "message": "成功",
   "data": {
-	"token": "sdgkjdfhgjkshdfglhsd"
+	"token": "dfeguhrguiwebciuwebf"
   },
-  "timestamp": 1514863228068
+  "timestamp": 1514535058890
 }
 ```
 
 ------
-
-#### 3.2 密码登录
-<table>
-  <tbody>
-    <tr>
-      <td>URI</td>
-      <td>/user/passwordLogin.html</td>
-    </tr>
-    <tr>
-      <td>描述</td>
-      <td>密码登录</td>
-    </tr>
-  </tbody>
-</table>
-
-##### data入参
-参数名|非空|类型|说明
----|---|---|---
-phone | 是 | String| 手机号
-password | 是 | String| 密码
-
-
-
-##### 出参
-
-参数名|非空|类型|说明
----|---|---|---
-code | 是 | int| 返回代码
-message | 是 | String | 返回说明
-data | 是 | Object | 返回数据字段
-timestamp | 是 | Long | 服务器时间戳
-token | 是 | String | 登录标识
-
-sample:
-```json
-{
-  "code": 0,
-  "message": "成功",
-  "data": {
-	  "token": "asfkjshfskdhfkjsdhgkjdfghdfgdfg"
-  },
-  "timestamp": 1514863228068
-}
-```
-
-------
-
-
-#### 3.3 忘记密码
-<table>
-  <tbody>
-    <tr>
-      <td>URI</td>
-      <td>/user/forgetPassword.html</td>
-    </tr>
-    <tr>
-      <td>描述</td>
-      <td>忘记密码</td>
-    </tr>
-  </tbody>
-</table>
-
-##### data入参
-参数名|非空|类型|说明
----|---|---|---
-phone | 是 | String| 手机号
-code | 是 | String| 短信码
-password | 是 | String| 新密码
-
-
-
-##### 出参
-
-参数名|非空|类型|说明
----|---|---|---
-code | 是 | int| 返回代码
-message | 是 | String | 返回说明
-data | 是 | Object | 返回数据字段
-timestamp | 是 | Long | 服务器时间戳
-
-
-sample:
-```json
-{
-  "code": 0,
-  "message": "成功",
-  "data": {},
-  "timestamp": 1514863228068
-}
-```
-
-------
-
-#### 3.4 新增点击记录
-<table>
-  <tbody>
-    <tr>
-      <td>URI</td>
-      <td>/user/insertClickRecord.html</td>
-    </tr>
-    <tr>
-      <td>描述</td>
-      <td>新增点击记录（用户进入详情页之后点击立即申请的时候调用）</td>
-    </tr>
-  </tbody>
-</table>
-
-##### data入参
-参数名|非空|类型|说明
----|---|---|---
-productId | 是 | int| 产品ID
-
-
-
-##### 出参
-
-参数名|非空|类型|说明
----|---|---|---
-code | 是 | int| 返回代码
-message | 是 | String | 返回说明
-data | 是 | Object | 返回数据字段
-timestamp | 是 | Long | 服务器时间戳
-
-
-sample:
-```json
-{
-  "code": 0,
-  "message": "成功",
-  "data": {},
-  "timestamp": 1514863228068
-}
-```
-
-------
-
