@@ -8,9 +8,9 @@
 
 - 请求报文：
   - uid: 每个设备的唯一标识,不变且唯一
-  - appId: 每个应用的ID
+  - appId: 每个应用的ID(初始化为1)
   - os:平台 Android / iOS
-  - channel: 渠道(由后台给)
+  - channel: 渠道(初始化为1)
   - token:用户的登录标识
   - version:版本 内部版本 初始化为1 整形 每打次包加一
   - data:json类型  所有的入参都放里面
@@ -570,7 +570,10 @@ sample:
 ---|---|---|---
 ab | 是 | int| 0正常页面 1审核页面
 KfUrl | 是 | String| 客服地址
-
+newapp | 是 | int| 0没有更新 1有新版本
+gxType | 是 | int| 0 非强制更新 1强制更新 (也就是有没有关闭按钮的事)
+content | 是 | String| 更新说明
+url | 是 | String| 更新地址
 
 sample:
 ```json
@@ -579,7 +582,11 @@ sample:
   "message": "成功",
   "data": {
 	"ab": 0,
-	"KfUrl": "http://www.baidu.com"
+	"KfUrl": "http://www.baidu.com",
+	"newapp": 1,
+	"gxType": 0,
+	"content": "更新说明",
+	"url": "http://www.baidu.com"
   },
   "timestamp": 1514535058890
 }
