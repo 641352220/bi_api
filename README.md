@@ -57,6 +57,7 @@
   - [x] [2.2 登录短信验证码](#22-登录短信验证码)
   - [x] [2.3 验证码登录](#23-验证码登录)
   - [x] [2.4 密码登录](#24-密码登录)
+  - [x] [2.5 修改登录密码](#25-修改登录密码)
 
 
 
@@ -743,6 +744,43 @@ password | 是 | String | 密码
 参数名|非空|类型|说明
 ---|---|---|---
 token | 是 | String | 登录标识,后续的所有接口必须带上这个token
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+	"token": "dfeguhrguiwebciuwebf"
+  },
+  "timestamp": 1514535058890
+}
+```
+
+------
+
+#### 2.5 修改登录密码
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/user/updatePassword.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>修改登录密码</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+参数名|非空|类型|说明
+---|---|---|---
+password | 是 | String | 密码
+
+
+##### data出参
+无
 
 sample:
 ```json
