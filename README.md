@@ -15,6 +15,7 @@
   - version:版本 内部版本 初始化为1 整形 每打次包加一
   - data:json类型  所有的入参都放里面
   - data.timestamp:时间戳 每次请求都要传
+  
 ```json
 {
   "uid": "a29cf5f84ad64ab1a5dbc5a58ca53628",
@@ -52,6 +53,7 @@
   - [x] [1.5 点击记录列表数据](#15-点击记录列表数据)
   - [x] [1.6 新增反馈](#16-新增反馈)
   - [x] [1.7 获取APP信息](#17-获取APP信息)
+  - [x] [1.8 app更新](#18-app更新)
 - [x] 2.[其他](#2其他)
   - [x] [2.1 图形码](#21-图形码)
   - [x] [2.2 登录短信验证码](#22-登录短信验证码)
@@ -593,6 +595,58 @@ sample:
 	"gxType": 0,
 	"content": "更新说明",
 	"url": "http://www.baidu.com"
+  },
+  "timestamp": 1514535058890
+}
+```
+------
+
+#### 1.8 app更新
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/getNew.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>app更新</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+无
+
+##### data出参
+
+参数名|非空|类型|说明
+---|---|---|---
+apk | 是 | json| apk更新json
+apk.updateTime | 是 | String| 更新时间
+apk.codeversion | 是 | String| 版本
+apk.downloadurl | 是 | String| 下载地址
+wgt | 是 | json| wgt更新json
+wgt.updateTime | 是 | String| 更新时间
+wgt.codeversion | 是 | String| 版本
+wgt.downloadurl | 是 | String| 下载地址
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+	"apk": {
+		"updateTime": "2020-08-08 08:11",
+		"downloadurl": "http://www.baidu.com",
+		"codeversion": "0.0.1"
+	},
+	"wgt": {
+		"updateTime": "2020-08-08 08:11",
+		"downloadurl": "http://www.baidu.com",
+		"codeversion": "0.0.1"
+	}
   },
   "timestamp": 1514535058890
 }
