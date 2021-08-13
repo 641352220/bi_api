@@ -576,6 +576,10 @@ newapp | 是 | int| 0没有更新 1有新版本
 gxType | 是 | int| 0 非强制更新 1强制更新 (也就是有没有关闭按钮的事)
 content | 是 | String| 更新说明
 url | 是 | String| 更新地址
+shimingUrl | 是 | String| 实名协议地址
+infoUrl | 是 | String| 信息授权地址
+regUrl | 是 | String| 注册地址
+yinsiUrl | 是 | String| 隐私地址
 
 sample:
 ```json
