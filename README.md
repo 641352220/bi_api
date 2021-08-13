@@ -8,9 +8,9 @@
 
 - 请求报文：
   - uid: 每个设备的唯一标识,不变且唯一
-  - appId: 每个应用的ID(初始化为1)
+  - appId: 每个应用的ID
   - os:平台 Android / iOS
-  - channel: 渠道(初始化为1)
+  - channel: 渠道(由后台给)
   - token:用户的登录标识
   - version:版本 内部版本 初始化为1 整形 每打次包加一
   - data:json类型  所有的入参都放里面
@@ -56,6 +56,7 @@
   - [x] [2.1 图形码](#21-图形码)
   - [x] [2.2 登录短信验证码](#22-登录短信验证码)
   - [x] [2.3 验证码登录](#23-验证码登录)
+  - [x] [2.4 密码登录](#24-密码登录)
 
 
 
@@ -694,6 +695,47 @@ code | 是 | String | 短信码
 jingdu | 是 | String | 用户注册的时候的经度(非必传)
 loginType | 是 | String | 登录类型 0 正常登录 1 一键登录 (根据情况固定0就行)
 weidu | 是 | String | 用户注册的时候的纬度(非必传)
+
+
+##### data出参
+
+参数名|非空|类型|说明
+---|---|---|---
+token | 是 | String | 登录标识,后续的所有接口必须带上这个token
+
+sample:
+```json
+{
+  "code": 0,
+  "message": "成功",
+  "data": {
+	"token": "dfeguhrguiwebciuwebf"
+  },
+  "timestamp": 1514535058890
+}
+```
+
+------
+
+#### 2.4 密码登录
+<table>
+  <tbody>
+    <tr>
+      <td>URI</td>
+      <td>/user/passLogin.html</td>
+    </tr>
+    <tr>
+      <td>描述</td>
+      <td>密码登录</td>
+    </tr>
+  </tbody>
+</table>
+
+##### data入参
+参数名|非空|类型|说明
+---|---|---|---
+phone | 是 | String | 手机号
+password | 是 | String | 密码
 
 
 ##### data出参
